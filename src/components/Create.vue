@@ -41,6 +41,7 @@
                         id="content-input"
                         v-model="item.content"
                         :state="contentState"
+                        rows="4"
                         required
                     ></b-form-textarea>
                 </b-form-group>

@@ -46,7 +46,13 @@
                     <td>{{ item.start_time }}</td>
                     <td>{{ item.end_time }}</td>
                     <td>
-                        <button class="btn btn-sm btn-primary">View</button>
+                        <b-button
+                            v-b-modal.view-agenda
+                            variant="primary"
+                            class="btn-sm"
+                            @click="viewDetail(item)"
+                        >View
+                        </b-button>
                         <button class="btn btn-sm btn-success ms-2">Edit</button>
                         <button class="btn btn-sm btn-danger ms-2">Delete</button>
                     </td>
@@ -55,6 +61,9 @@
 
             </table>
         </b-card>
+
+        <ViewAgenda :item="item_data" v-if="view_detail"/>
+
     </div>
 </template>
 
@@ -62,13 +71,16 @@
 
 import moment from 'moment'
 import CreateAgenda from "./Create";
+import ViewAgenda from "./ViewAgenda";
 
 export default {
     name: "Index",
-    components: {CreateAgenda},
+    components: {CreateAgenda, ViewAgenda},
     data() {
         return {
             message: '',
+            item_data: {},
+            view_detail: false,
             items: [
                 {
                     title: 'There is only one corner of the universe you can be certain of improving, and that\'s your own self.',
@@ -98,6 +110,10 @@ export default {
         addItem(value) {
             this.items.unshift(value)
             this.message = 'Agenda Added'
+        },
+        viewDetail(item) {
+            this.view_detail = true
+            this.item_data = item;
         }
     }
 }
