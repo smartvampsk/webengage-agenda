@@ -129,7 +129,7 @@ export default {
         },
         fetchDetail(time) {
             let index = this.getIndex(time)
-            this.item = this.items[index]
+            this.item = this.agendas[index]
         }
     }
 

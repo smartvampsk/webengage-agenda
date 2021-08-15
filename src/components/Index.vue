@@ -13,8 +13,10 @@
                 </b-col>
                 <b-col>
                     <div class="text-end">
-                        <button class="btn btn-sm btn-outline-success">
-                            Export
+                        <button
+                            class="btn btn-sm btn-outline-success"
+                            @click="exportToCSV()"
+                        >Export
                             <b-icon-cloud-download class="ps-1"/>
                         </button>
                         <button class="btn btn-sm btn-outline-success ms-2">
@@ -37,10 +39,10 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-if="!items.length">
+                <tr v-if="!agendas.length">
                     <td colspan="6">No Record Found</td>
                 </tr>
-                <tr v-for="(item, index) in items" :key="item.created_at">
+                <tr v-for="(item, index) in agendas" :key="item.created_at">
                     <td>{{ ++index }}</td>
                     <td class="title">{{ item.title }}</td>
                     <td>{{ item.date | formatDate }}</td>
@@ -101,12 +103,12 @@ export default {
     },
     methods: {
         addItem(value) {
-            this.items.unshift(value)
+            this.agendas.unshift(value)
             this.message = 'Agenda Added'
         },
         updateItem(value) {
             let index = this.getIndex(value.created_at)
-            this.$set(this.items, index, value)
+            this.$set(this.agendas, index, value)
             this.message = 'Agenda Updated'
         },
         viewDetail(item) {
@@ -120,7 +122,7 @@ export default {
         deleteData(item) {
             let index = this.getIndex(item.created_at)
             if (this.confirmDelete()) {
-                this.items.splice(index, 1)
+                this.agendas.splice(index, 1)
                 this.message = 'Agenda Deleted!'
             }
         }

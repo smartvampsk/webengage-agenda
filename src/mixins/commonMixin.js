@@ -3,7 +3,7 @@ import moment from "moment";
 export const commonMixin = {
     data() {
         return {
-            items: [
+            agendas: [
                 {
                     title: 'There is only one corner of the universe you can be certain of improving, and that\'s your own self.',
                     content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aliquam aliquid amet dicta dolore, dolorem dolorum id iure laborum nihil nostrum numquam, placeat quia rem sed sunt vel! Dolorem, maxime.',
@@ -18,7 +18,7 @@ export const commonMixin = {
                     date: "2021-08-16",
                     start_time: '13:30:00',
                     end_time: '14:00:00',
-                    created_at: 1629014779514
+                    created_at: 1628882688000
                 },
             ],
             errors: [],
@@ -27,6 +27,7 @@ export const commonMixin = {
             dateState: null,
             startTimeState: null,
             endTimeState: null,
+            headers: ['Agenda title', 'Content', 'Date', 'Start Time', 'End time', 'Created At'],
         }
     },
 
@@ -92,11 +93,35 @@ export const commonMixin = {
             this.endTimeState = null
         },
         getIndex(c) {
-            let index = this.items.findIndex(item => item.created_at == c)
+            let index = this.agendas.findIndex(item => item.created_at == c)
             return index
         },
         confirmDelete() {
             return confirm('Are you sure to delete this?')
+        },
+
+        exportToCSV() {
+            let arrData = this.agendas
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += [
+                this.headers.join(';'),
+                // ...arrData.map(item => Object.values(item).join(";"))
+                ...arrData.map(item =>
+                    item.title + ";" +
+                    item.content + ";" +
+                    item.date + ";" +
+                    item.start_time + ";" +
+                    item.end_time + ";" +
+                    moment(item.created_at).format('YYYY-MM-DD hh:mm:ss') + ";"
+                )
+            ]
+                .join("\n")
+                .replace(/(^\[)|(\]$)/gm, "");
+            const data = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", data);
+            link.setAttribute("download", "agendas.csv");
+            link.click();
         }
     }
 }
