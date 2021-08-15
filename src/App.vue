@@ -1,7 +1,14 @@
 <template>
     <div id="app">
-        <img alt="Vue logo" src="./assets/logo.png">
-        <h2>WebEngage Test Task</h2>
+        <transition name="fade">
+            <b-container class="py-3">
+                <div class="pb-4">
+                    <h3 class="text-center font-weight-bold">WebEngage Test Task</h3>
+                    <hr class="col-12 mx-auto">
+                </div>
+                <router-view></router-view>
+            </b-container>
+        </transition>
     </div>
 </template>
 
@@ -9,17 +16,8 @@
 
 export default {
     name: 'App',
-    components: {}
 }
 </script>
 
 <style>
-#app {
-    font-family: Avenir, Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-align: center;
-    color: #2c3e50;
-    margin-top: 60px;
-}
 </style>
