@@ -1,12 +1,16 @@
 <template>
     <div>
         <h4>Agenda</h4>
+
         <b-card>
+            <b-alert show dismissible v-if="message">
+                {{ message }}
+            </b-alert>
+
             <b-row class="justify-content-center align-items-center" no-gutters>
                 <b-col>
-                    <button class="btn btn-sm btn-primary">
-                        Add New Agenda
-                    </button>
+                    <b-button v-b-modal.create-agenda variant="primary" class="btn-sm">Add New Agenda</b-button>
+                    <CreateAgenda v-on:getItem="addItem"/>
                 </b-col>
                 <b-col>
                     <div class="text-end">
@@ -37,8 +41,8 @@
                 <tbody>
                 <tr v-for="(item, index) in items" :key="item._id">
                     <td>{{ ++index }}</td>
-                    <td>{{ item.title }}</td>
-                    <td>{{ item.date }}</td>
+                    <td class="title">{{ item.title }}</td>
+                    <td>{{ item.date | formatDate }}</td>
                     <td>{{ item.start_time }}</td>
                     <td>{{ item.end_time }}</td>
                     <td>
@@ -56,31 +60,57 @@
 
 <script>
 
+import moment from 'moment'
+import CreateAgenda from "./Create";
+
 export default {
     name: "Index",
+    components: {CreateAgenda},
     data() {
         return {
+            message: '',
             items: [
                 {
-                    title: 'Dickerson',
+                    title: 'There is only one corner of the universe you can be certain of improving, and that\'s your own self.',
                     content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aliquam aliquid amet dicta dolore, dolorem dolorum id iure laborum nihil nostrum numquam, placeat quia rem sed sunt vel! Dolorem, maxime.',
-                    date: 40,
+                    date: "2021-08-15",
                     start_time: '10:30 AM',
-                    end_time: '11:30 AM'
+                    end_time: '11:30 AM',
+                    created_at: 1629014765010
                 },
                 {
-                    title: 'Larsen',
+                    title: 'So long as a person is capable of self-renewal they are a living being.',
                     content: 'Alias aliquam aliquid amet dicta dolore, dolorem dolorum id iure laborum nihil nostrum numquam, placeat quia rem sed sunt vel! Dolorem, maxime.',
-                    date: 21,
+                    date: "2021-08-16",
                     start_time: '10:30 AM',
-                    end_time: '11:30 AM'
+                    end_time: '11:30 AM',
+                    created_at: 1629014779514
                 },
             ]
+        }
+    },
+    filters: {
+        formatDate(date) {
+            return moment(date).format("YYYY-MM-DD")
+        }
+    },
+    methods: {
+        addItem(value) {
+            this.items.unshift(value)
+            this.message = 'Agenda Added'
         }
     }
 }
 </script>
 
-<style scoped>
+<style>
+td.title {
+    width: 25%;
+}
 
+.alert-dismissible button {
+    background: transparent;
+    float: right;
+    border: 0;
+}
 </style>
