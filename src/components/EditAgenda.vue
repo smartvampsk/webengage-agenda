@@ -1,11 +1,9 @@
 <template>
     <div>
         <b-modal
-            id="create-agenda"
+            id="edit-agenda"
             ref="modal"
-            title="Add New Agenda"
-            @show="resetModal"
-            @hidden="resetModal"
+            title="Edit Agenda"
             @ok="handleOk"
             ok-title="Submit"
         >
@@ -96,18 +94,21 @@
 import {commonMixin} from "../mixins/commonMixin";
 
 export default {
-    name: "Create",
+    name: "EditAgenda",
+    props: ['created_at'],
     mixins: [commonMixin],
     data() {
         return {
-            item: {
-                title: '',
-                content: '',
-                date: '',
-                start_time: '',
-                end_time: ''
-            },
+            item: {}
         }
+    },
+    watch: {
+        created_at() {
+            this.fetchDetail(this.created_at)
+        },
+    },
+    mounted() {
+        this.fetchDetail(this.created_at)
     },
     methods: {
         handleOk(e) {
@@ -118,15 +119,17 @@ export default {
             if (!this.checkFormValidity()) {
                 return
             }
-            this.item.created_at = Date.now()
             this.setItem()
-            this.resetModal()
             this.$nextTick(() => {
-                this.$bvModal.hide('create-agenda')
+                this.$bvModal.hide('edit-agenda')
             })
         },
         setItem() {
             this.$emit('getItem', this.item)
+        },
+        fetchDetail(time) {
+            let index = this.getIndex(time)
+            this.item = this.items[index]
         }
     }
 

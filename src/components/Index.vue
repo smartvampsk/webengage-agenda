@@ -6,7 +6,6 @@
             <b-alert show dismissible v-if="message">
                 {{ message }}
             </b-alert>
-
             <b-row class="justify-content-center align-items-center" no-gutters>
                 <b-col>
                     <b-button v-b-modal.create-agenda variant="primary" class="btn-sm">Add New Agenda</b-button>
@@ -39,7 +38,7 @@
                 </thead>
 
                 <tbody>
-                <tr v-for="(item, index) in items" :key="item._id">
+                <tr v-for="(item, index) in items" :key="item.created_at">
                     <td>{{ ++index }}</td>
                     <td class="title">{{ item.title }}</td>
                     <td>{{ item.date | formatDate }}</td>
@@ -53,7 +52,13 @@
                             @click="viewDetail(item)"
                         >View
                         </b-button>
-                        <button class="btn btn-sm btn-success ms-2">Edit</button>
+                        <b-button
+                            v-b-modal.edit-agenda
+                            variant="success"
+                            class="btn-sm ms-2"
+                            @click="editDetail(item)"
+                        >Edit
+                        </b-button>
                         <button class="btn btn-sm btn-danger ms-2">Delete</button>
                     </td>
                 </tr>
@@ -63,6 +68,7 @@
         </b-card>
 
         <ViewAgenda :item="item_data" v-if="view_detail"/>
+        <EditAgenda :created_at="unique_time" v-on:getItem="updateItem" v-if="edit_detail"/>
 
     </div>
 </template>
@@ -72,33 +78,20 @@
 import moment from 'moment'
 import CreateAgenda from "./Create";
 import ViewAgenda from "./ViewAgenda";
+import EditAgenda from "./EditAgenda";
+import {commonMixin} from "../mixins/commonMixin";
 
 export default {
     name: "Index",
-    components: {CreateAgenda, ViewAgenda},
+    components: {CreateAgenda, ViewAgenda, EditAgenda},
+    mixins: [commonMixin],
     data() {
         return {
             message: '',
             item_data: {},
+            unique_time: {},
             view_detail: false,
-            items: [
-                {
-                    title: 'There is only one corner of the universe you can be certain of improving, and that\'s your own self.',
-                    content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aliquam aliquid amet dicta dolore, dolorem dolorum id iure laborum nihil nostrum numquam, placeat quia rem sed sunt vel! Dolorem, maxime.',
-                    date: "2021-08-15",
-                    start_time: '10:30 AM',
-                    end_time: '11:30 AM',
-                    created_at: 1629014765010
-                },
-                {
-                    title: 'So long as a person is capable of self-renewal they are a living being.',
-                    content: 'Alias aliquam aliquid amet dicta dolore, dolorem dolorum id iure laborum nihil nostrum numquam, placeat quia rem sed sunt vel! Dolorem, maxime.',
-                    date: "2021-08-16",
-                    start_time: '10:30 AM',
-                    end_time: '11:30 AM',
-                    created_at: 1629014779514
-                },
-            ]
+            edit_detail: false,
         }
     },
     filters: {
@@ -111,10 +104,19 @@ export default {
             this.items.unshift(value)
             this.message = 'Agenda Added'
         },
+        updateItem(value) {
+            let index = this.getIndex(value.created_at)
+            this.$set(this.items, index, value)
+            this.message = 'Agenda Updated'
+        },
         viewDetail(item) {
             this.view_detail = true
-            this.item_data = item;
-        }
+            this.item_data = item
+        },
+        editDetail(item) {
+            this.unique_time = item.created_at
+            this.edit_detail = true
+        },
     }
 }
 </script>
