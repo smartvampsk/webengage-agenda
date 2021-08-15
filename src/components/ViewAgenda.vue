@@ -23,11 +23,11 @@
                 </tr>
                 <tr>
                     <th>Start Time</th>
-                    <td>{{ item.start_time }}</td>
+                    <td>{{ item.start_time | formatTime }}</td>
                 </tr>
                 <tr>
                     <th>End Time</th>
-                    <td>{{ item.end_time }}</td>
+                    <td>{{ item.end_time | formatTime }}</td>
                 </tr>
                 <tr>
                     <th>Created at</th>
@@ -40,22 +40,12 @@
 </template>
 
 <script>
-import moment from 'moment'
+import {commonMixin} from "../mixins/commonMixin";
 
 export default {
     name: "ViewAgenda",
     props: ['item'],
-    mounted() {
-
-    },
-    filters: {
-        formatDate(date) {
-            return moment(date).format("YYYY-MM-DD")
-        },
-        createdAt(date) {
-            return moment(date).format("dddd, MMMM Do YYYY")
-        }
-    },
+    mixins: [commonMixin],
 }
 </script>
 

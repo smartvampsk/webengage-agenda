@@ -1,3 +1,5 @@
+import moment from "moment";
+
 export const commonMixin = {
     data() {
         return {
@@ -25,6 +27,19 @@ export const commonMixin = {
             dateState: null,
             startTimeState: null,
             endTimeState: null,
+        }
+    },
+
+    filters: {
+        formatDate(date) {
+            return moment(date).format("YYYY-MM-DD")
+        },
+        createdAt(date) {
+            return moment(date).format("dddd, MMMM Do YYYY")
+        },
+        formatTime(time) {
+            return moment(time, ["HH.mm"]).format("hh:mm a");
+
         }
     },
 
@@ -79,6 +94,9 @@ export const commonMixin = {
         getIndex(c) {
             let index = this.items.findIndex(item => item.created_at == c)
             return index
+        },
+        confirmDelete() {
+            return confirm('Are you sure to delete this?')
         }
     }
 }

@@ -36,14 +36,16 @@
                     <th>Actions</th>
                 </tr>
                 </thead>
-
                 <tbody>
+                <tr v-if="!items.length">
+                    <td colspan="6">No Record Found</td>
+                </tr>
                 <tr v-for="(item, index) in items" :key="item.created_at">
                     <td>{{ ++index }}</td>
                     <td class="title">{{ item.title }}</td>
                     <td>{{ item.date | formatDate }}</td>
-                    <td>{{ item.start_time }}</td>
-                    <td>{{ item.end_time }}</td>
+                    <td>{{ item.start_time | formatTime }}</td>
+                    <td>{{ item.end_time | formatTime }}</td>
                     <td>
                         <b-button
                             v-b-modal.view-agenda
@@ -59,7 +61,11 @@
                             @click="editDetail(item)"
                         >Edit
                         </b-button>
-                        <button class="btn btn-sm btn-danger ms-2">Delete</button>
+                        <b-button
+                            class="btn btn-sm btn-danger ms-2"
+                            @click="deleteData(item)"
+                        >Delete
+                        </b-button>
                     </td>
                 </tr>
                 </tbody>
@@ -75,7 +81,6 @@
 
 <script>
 
-import moment from 'moment'
 import CreateAgenda from "./Create";
 import ViewAgenda from "./ViewAgenda";
 import EditAgenda from "./EditAgenda";
@@ -92,11 +97,6 @@ export default {
             unique_time: {},
             view_detail: false,
             edit_detail: false,
-        }
-    },
-    filters: {
-        formatDate(date) {
-            return moment(date).format("YYYY-MM-DD")
         }
     },
     methods: {
@@ -117,6 +117,13 @@ export default {
             this.unique_time = item.created_at
             this.edit_detail = true
         },
+        deleteData(item) {
+            let index = this.getIndex(item.created_at)
+            if (this.confirmDelete()) {
+                this.items.splice(index, 1)
+                this.message = 'Agenda Deleted!'
+            }
+        }
     }
 }
 </script>
