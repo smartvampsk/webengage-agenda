@@ -27,7 +27,15 @@ export const commonMixin = {
             dateState: null,
             startTimeState: null,
             endTimeState: null,
-            headers: ['Agenda title', 'Content', 'Date', 'Start Time', 'End time', 'Created At'],
+            headers: {
+                title: 'Agenda title',
+                content: 'Content',
+                date: 'Date',
+                start_time: 'Start Time',
+                end_time: 'End time',
+                created_at: 'Created At'
+            },
+            import_file: [],
         }
     },
 
@@ -104,7 +112,7 @@ export const commonMixin = {
             let arrData = this.agendas
             let csvContent = "data:text/csv;charset=utf-8,";
             csvContent += [
-                this.headers.join(';'),
+                Object.values(this.headers).join(';'),
                 // ...arrData.map(item => Object.values(item).join(";"))
                 ...arrData.map(item =>
                     item.title + ";" +
@@ -122,6 +130,43 @@ export const commonMixin = {
             link.setAttribute("href", data);
             link.setAttribute("download", "agendas.csv");
             link.click();
+        },
+
+        openFilePicker() {
+            const elem = this.$refs.open_file_picker
+            elem.click()
+        },
+
+        importCSV(e) {
+            this.import_file = e.target.files[0]
+
+            let reader = new FileReader();
+            reader.readAsText(this.import_file, 'UTF-8');
+
+            reader.onload = readerEvent => {
+                let content = readerEvent.target.result;
+                this.loadSpread(content)
+            }
+        },
+
+        loadSpread(content) {
+            let jsonData = content
+            let allTextLines = jsonData.split(/\r\n|\n/);
+            for (let i = 1; i < allTextLines.length; i++) {
+                let data = allTextLines[i].split(';');
+                this.addFromImport(data)
+            }
+        },
+
+        addFromImport(data) {
+            let new_val = {};
+            new_val['title'] = data[0];
+            new_val['content'] = data[1];
+            new_val['date'] = data[2];
+            new_val['start_time'] = data[3];
+            new_val['end_time'] = data[4];
+            new_val['created_at'] = moment(data[5]).unix();
+            this.agendas.unshift(new_val)
         }
     }
 }

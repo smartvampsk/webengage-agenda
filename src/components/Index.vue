@@ -19,9 +19,12 @@
                         >Export
                             <b-icon-cloud-download class="ps-1"/>
                         </button>
-                        <button class="btn btn-sm btn-outline-success ms-2">
-                            Import
+                        <button
+                            class="btn btn-sm btn-outline-success ms-2"
+                            @click="openFilePicker"
+                        >Import
                             <b-icon-cloud-upload class="ps-1"/>
+                            <input type="file" accept=".csv" ref="open_file_picker" @change="importCSV"/>
                         </button>
                     </div>
                 </b-col>
@@ -139,5 +142,9 @@ td.title {
     background: transparent;
     float: right;
     border: 0;
+}
+
+input[type="file"] {
+    display: none;
 }
 </style>
