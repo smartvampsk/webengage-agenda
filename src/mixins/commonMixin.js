@@ -21,6 +21,8 @@ export const commonMixin = {
                     created_at: 1628882688000
                 },
             ],
+
+            message: '',
             errors: [],
             titleState: null,
             contentState: null,
@@ -130,6 +132,7 @@ export const commonMixin = {
             link.setAttribute("href", data);
             link.setAttribute("download", "agendas.csv");
             link.click();
+            this.message = 'Data Exported!'
         },
 
         openFilePicker() {
@@ -167,6 +170,7 @@ export const commonMixin = {
             new_val['end_time'] = data[4];
             new_val['created_at'] = moment(data[5]).unix();
             this.agendas.unshift(new_val)
+            this.message = 'Agenda Imported'
         }
     }
 }

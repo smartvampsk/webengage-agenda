@@ -95,7 +95,7 @@ import {commonMixin} from "../mixins/commonMixin";
 
 export default {
     name: "EditAgenda",
-    props: ['created_at'],
+    props: ['item_data'],
     mixins: [commonMixin],
     data() {
         return {
@@ -103,12 +103,12 @@ export default {
         }
     },
     watch: {
-        created_at() {
-            this.fetchDetail(this.created_at)
+        item_data() {
+            this.item = this.item_data
         },
     },
     mounted() {
-        this.fetchDetail(this.created_at)
+        this.item = this.item_data
     },
     methods: {
         handleOk(e) {
@@ -127,10 +127,6 @@ export default {
         setItem() {
             this.$emit('getItem', this.item)
         },
-        fetchDetail(time) {
-            let index = this.getIndex(time)
-            this.item = this.agendas[index]
-        }
     }
 
 }

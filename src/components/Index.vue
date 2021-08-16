@@ -79,7 +79,7 @@
         </b-card>
 
         <ViewAgenda :item="item_data" v-if="view_detail"/>
-        <EditAgenda :created_at="unique_time" v-on:getItem="updateItem" v-if="edit_detail"/>
+        <EditAgenda :item_data="edit_data" v-on:getItem="updateItem" v-if="edit_detail"/>
 
     </div>
 </template>
@@ -97,11 +97,10 @@ export default {
     mixins: [commonMixin],
     data() {
         return {
-            message: '',
             item_data: {},
-            unique_time: {},
             view_detail: false,
             edit_detail: false,
+            edit_data: {},
         }
     },
     methods: {
@@ -119,7 +118,7 @@ export default {
             this.item_data = item
         },
         editDetail(item) {
-            this.unique_time = item.created_at
+            this.edit_data = item
             this.edit_detail = true
         },
         deleteData(item) {
